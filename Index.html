@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Frank Family 2027 瀨戶內海・四國深度之旅</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+            background-color: #FAFAFA;
+            color: #171717;
+            touch-action: manipulation;
+            padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+        }
+        .zen-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .bottom-nav {
+            background-color: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid #E5E5E5;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 50;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .nav-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 8px 0; color: #737373; transition: color 0.15s ease; width: 100%;
+        }
+        .nav-btn.active { color: #0A0A0A; font-weight: 700; }
+        .day-chip {
+            padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+            background-color: #F5F5F5; color: #525252; border: 1px solid transparent;
+            white-space: nowrap; transition: all 0.15s ease; flex-shrink: 0;
+        }
+        .day-chip.active { background-color: #171717; color: #FFFFFF; font-weight: 600; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="max-w-xl mx-auto min-h-screen relative antialiased">
+
+    <header class="pt-6 pb-4 px-5 border-b border-neutral-200 bg-white sticky top-0 z-30">
+        <div class="flex items-baseline justify-between">
+            <span class="text-xs font-semibold tracking-widest text-neutral-400 uppercase">Kenji Tour Guide</span>
+            <span class="text-xs text-neutral-500 font-medium">5大2小 • 7天6夜</span>
+        </div>
+        <h1 class="text-xl font-bold tracking-tight text-neutral-900 mt-1">
+            四國・瀨戶內海深度行
+        </h1>
+        <p class="text-xs text-neutral-500 mt-0.5">2027/01/31 (日) – 02/06 (六) ｜ 岡山 • 倉敷 • 高松 • 琴平 • 高知</p>
+    </header>
+
+    <!-- TAB 1: 每日行程 -->
+    <main id="tab-itinerary" class="tab-content p-5 space-y-4">
+        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="day-selector">
+            <button onclick="filterDay(0)" class="day-chip active">全部行程</button>
+            <button onclick="filterDay(1)" class="day-chip">D1 岡山</button>
+            <button onclick="filterDay(2)" class="day-chip">D2 倉敷</button>
+            <button onclick="filterDay(3)" class="day-chip">D3 跨海自駕</button>
+            <button onclick="filterDay(4)" class="day-chip">D4 小豆島</button>
+            <button onclick="filterDay(5)" class="day-chip">D5 琴平溫泉</button>
+            <button onclick="filterDay(6)" class="day-chip">D6 高知</button>
+            <button onclick="filterDay(7)" class="day-chip">D7 桂濱返台</button>
+        </div>
+        <div id="itinerary-cards" class="space-y-4"></div>
+    </main>
+
+    <!-- TAB 2: 重要提醒 -->
+    <main id="tab-notices" class="tab-content p-5 space-y-5 hidden">
+        <div>
+            <h2 class="text-lg font-bold text-neutral-900">行前關鍵卡位與提醒</h2>
+            <p class="text-xs text-neutral-500 mt-0.5">專業導遊健一整理的交通、禮儀、氣候與訂位時程</p>
+        </div>
+
+        <div class="zen-card p-4 space-y-3">
+            <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider">預約進度表</div>
+            <div class="space-y-2.5 text-sm">
+                <div class="flex items-start justify-between pb-2.5 border-b border-neutral-100">
+                    <div>
+                        <div class="font-semibold text-neutral-900">ことひら温泉 御宿 敷島館</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">Day 5 一泊二食・4間獨立湯屋免預約</div>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 font-medium shrink-0">已確認</span>
+                </div>
+                <div class="flex items-start justify-between pb-2.5 border-b border-neutral-100">
+                    <div>
+                        <div class="font-semibold text-neutral-900">岡山租車 ➔ 高松還車（2台車）</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">4個29吋箱平均分配・已選 ETC 卡</div>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 font-medium shrink-0">已確認</span>
+                </div>
+                <div class="flex items-start justify-between pb-2.5 border-b border-neutral-100">
+                    <div>
+                        <div class="font-semibold text-neutral-900">小豆島汽車渡輪（自動車航送）</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">開放日：<strong>2026/12/03 09:00</strong>｜車牌填「レンタカー」保留車位</div>
+                    </div>
+                    <a href="https://yoyaku.shikokuferry.com/" target="_blank" class="text-xs text-neutral-900 underline font-semibold shrink-0">官網 ↗</a>
+                </div>
+                <div class="flex items-start justify-between">
+                    <div>
+                        <div class="font-semibold text-neutral-900">JR 特急南風號指定席</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">開放日：<strong>2027/01/05 09:00</strong>｜劃位鎖定每節車廂最後一排放行李</div>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-neutral-50 text-neutral-400 font-medium shrink-0">乘車前1個月</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增：餐廳訂位 -->
+        <div class="zen-card p-4 space-y-3">
+            <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider">餐廳訂位清單（7人請務必預約）</div>
+            <div class="space-y-2.5 text-sm">
+                <div class="flex items-start justify-between pb-2.5 border-b border-neutral-100">
+                    <div>
+                        <div class="font-semibold text-neutral-900">一鶴 高松店（D3 晚餐）</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">人氣極高，假日常排1.5~2小時，7人務必提早電話預約</div>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-medium shrink-0">最優先</span>
+                </div>
+                <div class="flex items-start justify-between pb-2.5 border-b border-neutral-100">
+                    <div>
+                        <div class="font-semibold text-neutral-900">明神丸 本店（D6 晚餐）</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">弘人市場店為美食街座位無法預約，7人改訂本店</div>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-medium shrink-0">最優先</span>
+                </div>
+                <div class="flex items-start justify-between pb-2.5 border-b border-neutral-100">
+                    <div>
+                        <div class="font-semibold text-neutral-900">焼肉割烹 J's苑（D1 晚餐）</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">掘りごたつ完全個室，建議出發前1個月預約</div>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 font-medium shrink-0">重要</span>
+                </div>
+                <div class="flex items-start justify-between">
+                    <div>
+                        <div class="font-semibold text-neutral-900">熟成焼肉 にくまにあ 本店（D2 晚餐）</div>
+                        <div class="text-xs text-neutral-500 mt-0.5">掘りごたつ個室，可線上預約（Tabelog／ぐるなび）</div>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 font-medium shrink-0">重要</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="zen-card p-4 space-y-3">
+            <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider">大寒節氣穿著與禮儀</div>
+            <div class="space-y-3 text-xs leading-relaxed text-neutral-600">
+                <div>
+                    <span class="font-bold text-neutral-900 block text-sm mb-0.5">🌡️ 氣溫與洋蔥式穿法</span>
+                    2月初為日本最冷的「大寒」時節，岡山高松約 1°C~10°C，高知約 3°C~13°C。室內暖氣強勁，請採「發熱內層＋好穿脫中層＋連帽防風羽絨外套」。海岬海風強勁，長輩與小朋友必備毛帽手套。
+                </div>
+                <div>
+                    <span class="font-bold text-neutral-900 block text-sm mb-0.5">♨️ 冬季泡湯溫差防護</span>
+                    室外與溫泉池溫差高達 35 度以上。入池前請長輩務必先用木桶舀熱水淋腳、手腕與腹部暖身（かけ湯），切勿直接浸入露天池，隨身毛巾切勿浸泡泉水中。
+                </div>
+                <div>
+                    <span class="font-bold text-neutral-900 block text-sm mb-0.5">💳 刷卡幣別防陷阱</span>
+                    在日刷信用卡時，若刷卡機跳出幣別選擇，請務必選擇<strong>「日圓 (JPY)」</strong>，避免高額匯差。
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TAB 3: 記帳 -->
+    <main id="tab-expense" class="tab-content p-5 space-y-4 hidden">
+        <div>
+            <h2 class="text-lg font-bold text-neutral-900">旅費分帳</h2>
+            <p class="text-xs text-neutral-500 mt-0.5">即時匯率換算與家族平分紀錄（資料自動保留在手機）</p>
+        </div>
+        <div class="zen-card p-4 text-center">
+            <div class="text-xs text-neutral-400 font-medium">累積總支出</div>
+            <div class="text-2xl font-bold tracking-tight text-neutral-900 mt-1" id="exp-total-twd">NT$ 0</div>
+            <div class="text-xs text-neutral-500 mt-1" id="exp-per-person">4位大人平分：每人 NT$ 0</div>
+        </div>
+        <div class="zen-card p-4 space-y-3">
+            <div class="flex items-center justify-between text-xs">
+                <span class="text-neutral-500 font-medium">即時匯率：1 JPY ≈ NT$<span id="rate-display">0.2050</span></span>
+                <button onclick="updateLiveRate()" class="text-neutral-900 underline font-semibold">更新匯率</button>
+            </div>
+            <div class="space-y-2 pt-1 border-t border-neutral-100">
+                <input type="text" id="in-title" placeholder="項目（如：千屋牛燒肉、小豆島渡輪）" class="w-full text-sm p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg outline-none focus:border-neutral-900">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="number" id="in-amount" placeholder="金額" class="col-span-2 text-sm p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg outline-none focus:border-neutral-900">
+                    <select id="in-currency" class="text-sm p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg outline-none">
+                        <option value="JPY">日圓 ¥</option>
+                        <option value="TWD">台幣 $</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="in-payer" class="text-xs p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg outline-none font-medium">
+                        <option value="Frank 付">Frank 付</option>
+                        <option value="長輩 付">長輩 付</option>
+                        <option value="公費 付">公費 付</option>
+                    </select>
+                    <select id="in-split" class="text-xs p-2.5 bg-neutral-50 border border-neutral-200 rounded-lg outline-none font-medium">
+                        <option value="4大平分">4大平分</option>
+                        <option value="5大平分">5大平分</option>
+                        <option value="全團公費">全團公費</option>
+                    </select>
+                </div>
+                <button onclick="addExpenseItem()" class="w-full py-2.5 bg-neutral-900 text-white text-xs font-semibold rounded-lg mt-1 active:bg-neutral-800 transition">
+                    記下一筆
+                </button>
+            </div>
+        </div>
+        <div id="expense-items-list" class="space-y-2"></div>
+    </main>
+
+    <!-- TAB 4: 行前清單 -->
+    <main id="tab-checklist" class="tab-content p-5 space-y-4 hidden">
+        <div>
+            <h2 class="text-lg font-bold text-neutral-900">行前確認清單</h2>
+            <p class="text-xs text-neutral-500 mt-0.5">點擊即可勾選完成項目，離線亦可使用</p>
+        </div>
+        <div class="zen-card p-4 space-y-3">
+            <div class="flex gap-2">
+                <input type="text" id="in-todo" placeholder="新增個人備忘（如：幼童水杯）" class="w-full text-xs p-2 bg-neutral-50 border border-neutral-200 rounded-lg outline-none focus:border-neutral-900">
+                <button onclick="addCustomTodo()" class="px-3.5 py-2 bg-neutral-900 text-white text-xs font-medium rounded-lg shrink-0">新增</button>
+            </div>
+            <div id="todo-items-list" class="space-y-1.5 pt-1"></div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="max-w-xl mx-auto grid grid-cols-4 px-2 py-1">
+            <button onclick="switchTab('itinerary')" id="btn-itinerary" class="nav-btn active">
+                <i class="fa-regular fa-calendar text-base mb-0.5"></i>
+                <span class="text-[11px]">行程</span>
+            </button>
+            <button onclick="switchTab('notices')" id="btn-notices" class="nav-btn">
+                <i class="fa-solid fa-bell-concierge text-base mb-0.5"></i>
+                <span class="text-[11px]">提醒</span>
+            </button>
+            <button onclick="switchTab('expense')" id="btn-expense" class="nav-btn">
+                <i class="fa-solid fa-calculator text-base mb-0.5"></i>
+                <span class="text-[11px]">記帳</span>
+            </button>
+            <button onclick="switchTab('checklist')" id="btn-checklist" class="nav-btn">
+                <i class="fa-solid fa-list-check text-base mb-0.5"></i>
+                <span class="text-[11px]">清單</span>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        const itinerary = [
+            {
+                day: 1, date: "1/31 (日)", title: "抵達岡山 • 烏城冬夜點燈 • 千屋牛燒肉",
+                hotel: "GRAND BASE Okayama Ekimae",
+                events: [
+                    { time: "下午", title: "桃園 ✈️ 岡山空港 ➔ 岡山站", desc: "搭乘機場巴士直達岡山站（約30分），步行至飯店放置行李。", nav: "岡山駅" },
+                    { time: "傍晚", title: "岡山城（烏城）＆ 後樂園冬夜散策", desc: "參訪漆黑外壁與姬路城相對的烏城，欣賞大寒冬夜景觀點燈。", nav: "岡山城" },
+                    { time: "晚餐", title: "千屋牛燒肉（焼肉割烹 J's苑）", desc: "JR岡山站西口步行約7分鐘，掘りごたつ完全個室可容納7人，主打A5熟成千屋牛。⚠️ 建議出發前1個月預約。", nav: "焼肉割烹 J's苑 岡山", highlight: true }
+                ]
+            },
+            {
+                day: 2, date: "2/01 (一)", title: "倉敷美觀歷史古鎮 • 運河遊船 • 熟成和牛",
+                hotel: "GRAND BASE Okayama Ekimae",
+                events: [
+                    { time: "08:45", title: "JR 岡山 ➔ 倉敷美觀地區", desc: "搭JR約17分鐘。上午9點前抵達避開團客，獨享平靜倒影；先購倉敷川遊船票。", nav: "倉敷美観地区" },
+                    { time: "白天", title: "阿智神社 ➔ 倉敷川遊船 ➔ 老屋手沖咖啡", desc: "俯瞰古鎮白壁町家，午餐享用洋食名店 Kappa 炸豬排/漢堡排。", nav: "阿智神社 倉敷" },
+                    { time: "晚餐", title: "熟成燒肉（熟成焼肉 にくまにあ 本店）", desc: "倉敷站南口步行約6分鐘，掘りごたつ個室可打通，七輪炭火自烤，帶小孩輕鬆自在。⚠️ 建議線上預約。", nav: "熟成焼肉 にくまにあ 本店 倉敷", highlight: true }
+                ]
+            },
+            {
+                day: 3, date: "2/02 (二)", title: "跨海公路自駕 • 天空鳥居 • 父母濱 • 屋島夕夜景",
+                hotel: "simasima-stay 高松駅",
+                events: [
+                    { time: "08:30", title: "岡山 Toyota 取2台車 ➔ 瀨戶大橋", desc: "確認租借 ETC 卡，中停海中央「與島PA」拍攝跨海大橋鋼纜壯景。", nav: "与島パーキングエリア" },
+                    { time: "上午", title: "高屋神社 天空鳥居（稻積山頂）", desc: "週二平日無接駁車管制，可直達山頂停車場，俯瞰雲端與瀨戶內海神殿。", nav: "高屋神社 本宮" },
+                    { time: "中午", title: "父母濱（天空之鏡）＆ 海景午餐", desc: "香川最美沙灘散步，順路品嚐讚岐牛午餐。", nav: "父母ヶ浜" },
+                    { time: "17:00", title: "屋島展望台（獅子の霊巌）", desc: "開車直達熔岩台地山頂，飽覽源平合戰古戰場、夕陽百選與高松港夜景。", nav: "屋島山上展望台" },
+                    { time: "晚餐", title: "一鶴（Ikkaku）骨付鳥 高松店", desc: "大啖獨門香料烘烤的帶骨多汁雞腿，分「ひな鳥（嫩）」與「おや鳥（老）」。⚠️ 人氣極高、假日常排1.5~2小時，7人請務必提早電話預約。", nav: "一鶴 高松店", highlight: true }
+                ]
+            },
+            {
+                day: 4, date: "2/03 (三)", title: "汽車渡輪跳島 • 天使之路 • 小豆島橄欖牛",
+                hotel: "simasima-stay 高松駅",
+                events: [
+                    { time: "早上", title: "高松港 ➔ 小豆島土庄港（汽車渡輪）", desc: "開船前40分抵專用车道，持車檢證付費。船艙內享用跳島名物現燙烏龍麵。", nav: "高松港 小豆島フェリー乗り場" },
+                    { time: "上午", title: "天使之路 ➔ 橄欖公園白色風車", desc: "配合退潮時間漫步海中沙洲（長輩免涉水），隨後走訪風車與魔女掃帚地景。", nav: "エンジェルロード 小豆島" },
+                    { time: "午餐", title: "小豆島 頂級橄欖牛燒烤（島活）", desc: "品嚐餵食橄欖果渣成長的黑毛和牛，富含油酸、果香甘甜不膩口。", nav: "小豆島 島活", highlight: true },
+                    { time: "下午", title: "丸金醬油之鄉 ➔ 返回高松", desc: "參訪400年木桶醬油藏、品嚐醬油冰淇淋。搭渡輪回高松。", nav: "マルキン醤油記念館" },
+                    { time: "晚餐", title: "高松鮮魚居酒屋（個室）", desc: "高松魚市場直送瀨戶內鮮魚（鯛魚、海膽、車蝦）。可在 Tabelog 搜尋「高松 鮮魚 居酒屋 個室」，挑選可容納7人的店家預約（店家待定）。", nav: "高松 鮮魚 居酒屋 個室", highlight: true }
+                ]
+            },
+            {
+                day: 5, date: "2/04 (四)", title: "金刀比羅宮785階 • 敷島館一泊二食・獨立湯屋",
+                hotel: "ことひら温泉 御宿 敷島館（已預訂）",
+                events: [
+                    { time: "上午", title: "高松歸還2台車 ➔ JR 琴平站", desc: "步行8分鐘直接把大行李寄放【敷島館】櫃檯，全團空手輕鬆出發。", nav: "ことひら温泉 御宿 敷島館" },
+                    { time: "白天", title: "金刀比羅宮 或 中野烏龍麵學校體驗", desc: "挑戰海上守護神785階參道，或伴隨音樂手作烏龍麵並享用午餐。", nav: "金刀比羅宮" },
+                    { time: "15:00", title: "入住敷島館・4間免預約個人湯屋", desc: "自由享受獨立家庭湯屋洗去爬山疲勞。露天風呂入池前請長輩先淋熱水暖身。", nav: "ことひら温泉 御宿 敷島館" },
+                    { time: "晚上", title: "讚岐黑毛和牛陶板燒會席 ＆ 夜鳴拉麵", desc: "料亭享用現烤和牛會席，22:00 免費提供熱騰騰夜鳴醬油拉麵。", nav: "ことひら温泉 御宿 敷島館", highlight: true }
+                ]
+            },
+            {
+                day: 6, date: "2/05 (五)", title: "特急南風縱貫四國 • 高知城 • 明神丸冬鰹稻草燒",
+                hotel: "一棟貸し宿 五台さんちのとなり宿",
+                events: [
+                    { time: "上午", title: "敷島館和風朝食 ➔ 特急南風號", desc: "穿越大小步危峽谷，4個29吋箱放置於每節車廂最後一排專屬空間。", nav: "高知駅" },
+                    { time: "下午", title: "日本現存天守 高知城 ➔ 弘人市場", desc: "走訪幕末土佐要塞，隨後逛弘人市場感受高知庶民美食文化（小點心、炸物、當地小吃）。", nav: "ひろめ市場" },
+                    { time: "晚餐", title: "稻草燒鰹魚塔塔奇（藁焼き鰹たたき 明神丸 本店）", desc: "招牌「藁焼き塩タタキ」，佐天日鹽享用，另推薦炭火長太郎貝。⚠️ 弘人市場店為美食街無法預約，7人請改訂本店並提前訂位。", nav: "藁焼き鰹たたき 明神丸 本店 高知", highlight: true }
+                ]
+            },
+            {
+                day: 7, date: "2/06 (六)", title: "桂濱龍王岬 • 坂本龍馬像 • 炭火長太郎貝 ✈️ 桃園",
+                hotel: "溫暖的家",
+                events: [
+                    { time: "上午", title: "桂濱海岸 ➔ 龍王岬（海津見神社）", desc: "登突出太平洋之海岬參拜龍王宮，看巨浪拍岩。冬日浪大請走步道勿近浪頭。", nav: "桂浜 龍王岬" },
+                    { time: "午餐", title: "海邊炭烤長太郎貝（五彩扇貝）", desc: "炭火現烤肥美長太郎貝與海鮮串燒，淋上高知特產柚子醋，鮮甜無比。", nav: "龍馬の浜茶屋", highlight: true },
+                    { time: "下午", title: "高知龍馬機場 ✈️ 平安返抵桃園", desc: "購買馬路村柚子土產，搭乘機場巴士直達機場返台。", nav: "高知龍馬空港" }
+                ]
+            }
+        ];
+
+        const defaultTodos = [
+            { text: "台灣駕照正本 ＋ 日文譯本（2位駕駛皆需攜帶）", done: false },
+            { text: "全員護照正本（有效期6個月以上）＆ 填寫 Visit Japan Web", done: false },
+            { text: "2026/12/03 09:00 線上搶位小豆島汽車渡輪（2台車）", done: false },
+            { text: "預約一鶴 高松店（D3，7人，最優先）", done: false },
+            { text: "預約明神丸 本店（D6，7人，最優先）", done: false },
+            { text: "預約焼肉割烹 J's苑（D1，個室）", done: false },
+            { text: "預約熟成焼肉 にくまにあ（D2，個室）", done: false },
+            { text: "預約高松鮮魚居酒屋（D4，個室，店家待定）", done: false },
+            { text: "2027/01/05 09:00 預訂 JR 南風號指定席（鎖定車廂最後一排）", done: false },
+            { text: "長輩與幼童防風毛帽、耳罩、手套、手握式暖暖包", done: false },
+            { text: "保濕乳霜、護唇膏、個人常備藥品、保溫隨身瓶", done: false },
+            { text: "日幣現金（弘人市場與老店使用）＋ 海外刷卡選日圓", done: false }
+        ];
+
+        let state = {
+            rate: parseFloat(localStorage.getItem("zen_rate")) || 0.2050,
+            expenses: JSON.parse(localStorage.getItem("zen_expenses")) || [],
+            todos: JSON.parse(localStorage.getItem("zen_todos_v2")) || defaultTodos
+        };
+
+        function saveAll() {
+            localStorage.setItem("zen_rate", state.rate);
+            localStorage.setItem("zen_expenses", JSON.stringify(state.expenses));
+            localStorage.setItem("zen_todos_v2", JSON.stringify(state.todos));
+        }
+
+        function switchTab(t) {
+            ['itinerary', 'notices', 'expense', 'checklist'].forEach(name => {
+                document.getElementById('tab-' + name).classList.add('hidden');
+                document.getElementById('btn-' + name).classList.remove('active');
+            });
+            document.getElementById('tab-' + t).classList.remove('hidden');
+            document.getElementById('btn-' + t).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderItinerary(filter = 0) {
+            const container = document.getElementById("itinerary-cards");
+            container.innerHTML = "";
+            const targets = itinerary.filter(d => filter === 0 || d.day === filter);
+
+            targets.forEach(item => {
+                const eventsHtml = item.events.map(e => `
+                    <div class="py-2.5 border-b border-neutral-100 last:border-none">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold px-1.5 py-0.5 rounded ${e.highlight ? 'bg-amber-100 text-amber-900' : 'bg-neutral-100 text-neutral-700'}">${e.time}</span>
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.nav)}" target="_blank" class="text-neutral-900 font-semibold underline text-xs">
+                                導航 ↗
+                            </a>
+                        </div>
+                        <div class="text-sm font-bold text-neutral-900 mt-1">${e.title}</div>
+                        <div class="text-xs text-neutral-500 mt-0.5 leading-relaxed">${e.desc}</div>
+                    </div>
+                `).join("");
+
+                const card = document.createElement("div");
+                card.className = "zen-card p-4";
+                card.innerHTML = `
+                    <div class="flex items-baseline justify-between border-b border-neutral-100 pb-2 mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-neutral-900 bg-neutral-100 px-2 py-0.5 rounded">Day ${item.day}</span>
+                            <span class="text-xs text-neutral-400 font-medium">${item.date}</span>
+                        </div>
+                        <span class="text-xs text-neutral-500 font-medium">🏨 ${item.hotel}</span>
+                    </div>
+                    <div class="text-base font-bold text-neutral-900 mb-2">${item.title}</div>
+                    <div>${eventsHtml}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterDay(d) {
+            const chips = document.querySelectorAll("#day-selector .day-chip");
+            chips.forEach((c, idx) => {
+                if (idx === d) c.classList.add("active");
+                else c.classList.remove("active");
+            });
+            renderItinerary(d);
+        }
+
+        function renderExpenses() {
+            document.getElementById("rate-display").innerText = state.rate.toFixed(4);
+            const listEl = document.getElementById("expense-items-list");
+            listEl.innerHTML = "";
+
+            let totalTWD = 0;
+            state.expenses.forEach((item, idx) => {
+                const twd = item.currency === "JPY" ? Math.round(item.amount * state.rate) : item.amount;
+                totalTWD += twd;
+
+                const row = document.createElement("div");
+                row.className = "zen-card p-3 flex justify-between items-center text-xs";
+                row.innerHTML = `
+                    <div>
+                        <div class="font-bold text-neutral-900 text-sm">${item.title}</div>
+                        <div class="text-neutral-400 mt-0.5">${item.payer} • ${item.split}</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <div class="font-bold text-neutral-900">${item.currency === "JPY" ? `¥${item.amount.toLocaleString()}` : `NT$${item.amount.toLocaleString()}`}</div>
+                            <div class="text-[11px] text-neutral-500">≈ NT$ ${twd.toLocaleString()}</div>
+                        </div>
+                        <button onclick="deleteExpense(${idx})" class="text-neutral-400 hover:text-neutral-900 px-1">✕</button>
+                    </div>
+                `;
+                listEl.appendChild(row);
+            });
+
+            document.getElementById("exp-total-twd").innerText = `NT$ ${totalTWD.toLocaleString()}`;
+            document.getElementById("exp-per-person").innerText = `4位大人平分：每人約 NT$ ${Math.round(totalTWD / 4).toLocaleString()}`;
+        }
+
+        function addExpenseItem() {
+            const t = document.getElementById("in-title").value.trim();
+            const a = parseFloat(document.getElementById("in-amount").value);
+            const c = document.getElementById("in-currency").value;
+            const p = document.getElementById("in-payer").value;
+            const s = document.getElementById("in-split").value;
+            if (!t || isNaN(a) || a <= 0) return alert("請填寫完整的項目與金額");
+
+            state.expenses.unshift({ title: t, amount: a, currency: c, payer: p, split: s });
+            document.getElementById("in-title").value = "";
+            document.getElementById("in-amount").value = "";
+            saveAll();
+            renderExpenses();
+        }
+
+        function deleteExpense(idx) {
+            state.expenses.splice(idx, 1);
+            saveAll();
+            renderExpenses();
+        }
+
+        async function updateLiveRate() {
+            try {
+                const res = await fetch("https://open.er-api.com/v6/latest/JPY");
+                const data = await res.json();
+                if (data && data.rates && data.rates.TWD) {
+                    state.rate = parseFloat(data.rates.TWD);
+                    saveAll();
+                    renderExpenses();
+                    alert("匯率已更新至最新市場基準：1 JPY ≈ NT$" + state.rate.toFixed(4));
+                }
+            } catch (e) {
+                alert("目前為離線狀態，維持現行設定匯率。");
+            }
+        }
+
+        function renderTodos() {
+            const listEl = document.getElementById("todo-items-list");
+            listEl.innerHTML = "";
+            state.todos.forEach((todo, idx) => {
+                const row = document.createElement("div");
+                row.className = "flex items-center justify-between p-2.5 rounded-lg border border-neutral-100 bg-neutral-50 text-xs";
+                row.innerHTML = `
+                    <label class="flex items-center gap-2.5 flex-1 cursor-pointer">
+                        <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" class="w-4 h-4 accent-neutral-900 rounded">
+                        <span class="${todo.done ? 'line-through text-neutral-400' : 'text-neutral-800 font-medium'}">${todo.text}</span>
+                    </label>
+                    <button onclick="deleteTodo(${idx})" class="text-neutral-300 hover:text-neutral-800 ml-2">✕</button>
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        function toggleTodo(idx) {
+            state.todos[idx].done = !state.todos[idx].done;
+            saveAll();
+            renderTodos();
+        }
+
+        function addCustomTodo() {
+            const val = document.getElementById("in-todo").value.trim();
+            if (!val) return;
+            state.todos.unshift({ text: val, done: false });
+            document.getElementById("in-todo").value = "";
+            saveAll();
+            renderTodos();
+        }
+
+        function deleteTodo(idx) {
+            state.todos.splice(idx, 1);
+            saveAll();
+            renderTodos();
+        }
+
+        window.onload = function() {
+            renderItinerary(0);
+            renderExpenses();
+            renderTodos();
+        };
+    </script>
+</body>
+</html>
